@@ -1,9 +1,9 @@
-set AVACADOSUPPLIERS := S1 S2 S3 S4 ;
+set AVOCADOSUPPLIERS := S1 S2 S3 S4 ;
 set PACKHOUSES := T1 T2 T3 T4 ;
-set AVACADODEMANDS := D1 D2 D3 D4 D5 ;
+set AVOCADODEMANDS := D1 D2 D3 D4 D5 ;
 set SIZES := SMALL MEDIUM LARGE ;
 
-param AvacadoSupply :=
+param AvocadoSupply :=
 S1		531
 S2		285
 S3		983
@@ -22,4 +22,27 @@ MEDIUM	375
 LARGE	500
  ;
  
-param 
+param AvocadoDemand :=
+D1  719
+D2  224
+D3  1077
+D4  20
+D5  20
+ ;
+
+param AvocadoSupplierToPackhouse :
+    T1 T2 T3 T4 :=
+S1  21 84 42 93
+S2  38 61 5  51
+S3  67 9  74 89
+S4  48 4  11 18
+ ;
+ 
+param AvocadoPackhouseToDemand :
+    T1 T2 T3 T4 :=
+D1  77 73 16 64
+D2  97 33 40 91
+D3  60 66 14 90
+D4  96 46 63 44
+D5  44 97 52 70
+ ;
