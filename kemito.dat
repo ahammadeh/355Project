@@ -1,0 +1,25 @@
+set AVACADOSUPPLIERS := S1 S2 S3 S4 ;
+set PACKHOUSES := T1 T2 T3 T4 ;
+set AVACADODEMANDS := D1 D2 D3 D4 D5 ;
+set SIZES := SMALL MEDIUM LARGE ;
+
+param AvacadoSupply :=
+S1		531
+S2		285
+S3		983
+S4		264
+ ;
+ 
+param MachineCost :=
+SMALL	10
+MEDIUM	25
+LARGE	35
+ ;
+
+param PackingRate :=
+SMALL	100
+MEDIUM	375
+LARGE	500
+ ;
+ 
+param 
