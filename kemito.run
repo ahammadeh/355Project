@@ -1,0 +1,4 @@
+reset;
+
+model kemito.mod;
+data kemito.dat;
