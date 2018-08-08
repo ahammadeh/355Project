@@ -2,3 +2,12 @@ reset;
 
 model kemito.mod;
 data kemito.dat;
+
+let {(i, j) in NODES} Cost[i,j] := if (i in AVOCADOSUPPLIERS) and (j in PACKHOUSES) then AvocadoSupplierToPackhouse[i,j] else if (i in PACKHOUSES) and (j in AVOCADODEMANDS) then AvocadoPackhouseToDemand[i,j];
+
+option solver gurobi;
+solve;
+
+display Build;
+display Flow;
+display TotalCost;
