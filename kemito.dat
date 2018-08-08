@@ -38,7 +38,7 @@ S3  67 9  74 89
 S4  48 4  11 18
  ;
  
-param AvocadoPackhouseToDemand :
+param AvocadoPackhouseToDemand (tr) :
     T1 T2 T3 T4 :=
 D1  77 73 16 64
 D2  97 33 40 91
