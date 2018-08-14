@@ -42,10 +42,16 @@ if AppleDifference > 0 then
 check : sum {s in APPLESUPPLIERS} AppleSupply[s] >= sum {d in APPLEDEMANDS} AppleDemand[d];
 
 option solver gurobi;
-solve;
 
-display Build;
-display Flow;
-display AppleBuild;
-display AppleFlow;
-display TotalCost;
+for {h in HISTORICAL}
+{
+	let {i in AVOCADODEMANDS} AvocadoDemand[i] := AvocadoDemandHistorical[i,h];
+	let {j in APPLEDEMANDS} AppleDemand[j] := AppleDemandHistorical[j,h];
+
+	solve;
+	display Build;
+	display Flow;
+	display AppleBuild;
+	display AppleFlow;
+	display TotalCost;
+}
