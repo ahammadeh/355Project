@@ -2,7 +2,7 @@ set AVOCADOSUPPLIERS := S1 S2 S3 S4 ;
 set APPLESUPPLIERS := S1 S2 S3 S4 S5 S6 S7 S8 S9 S10 ;
 set PACKHOUSES := T1 T2 T3 T4 ;
 set AVOCADODEMANDS := D1 D2 D3 D4 D5 ;
-set APPLEDEMANDS := D1 D2 D3 D4 D5 D6 D7 D8 D9 D10 D11 D2 D13 D14 D15 ;
+set APPLEDEMANDS := D1 D2 D3 D4 D5 D6 D7 D8 D9 D10 D11 D12 D13 D14 D15 ;
 set SIZES := SMALL MEDIUM LARGE ;
 set HISTORICAL := H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 ;
 
@@ -50,7 +50,7 @@ D4  96 46 63 44
 D5  44 97 52 70
  ;
  
-Param AvocadoDemandHistorical:
+param AvocadoDemandHistorical:
    H1   H2   H3   H4  H5   H6   H7   H8   H9   H10:=
 D1 6    1953 1976 262 1101 145  10   109  335  719 
 D2 1609 12   58   131 407  1159 306  98   1240 224 
@@ -105,7 +105,7 @@ D14	7		93	1		71
 D15	92	40	79	75
 ;
 
-Param AppleDemandHistorical:
+param AppleDemandHistorical:
 	H1		H2		H3		H4		H5		H6		H7		H8		H9		H10:=
 D1	173		12		1138	1854	116		4		26		868		141		180	
 D2	50		715		67		82		101		2		2		38		125		172	
@@ -124,7 +124,7 @@ D14	16		2846	60		77		30		2		14		52		100		80
 D15	155		249		93		66		29		76		2488	36		350		289	
 ;
 
-Param AppleSupply:=
+param AppleSupply:=
 S1 69
 S2 10
 S3 841
