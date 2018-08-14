@@ -32,6 +32,24 @@ D3  1077
 D4  20
 D5  20
  ;
+ 
+param AppleDemand :=
+D1	180	
+D2	172	
+D3	74	
+D4	93	
+D5	57	
+D6	53	
+D7	2266
+D8	53	
+D9	97	
+D10	89	
+D11	53	
+D12	55	
+D13	304	
+D14	80	
+D15	289	
+ ;
 
 param AvocadoSupplierToPackhouse :
     T1 T2 T3 T4 :=
