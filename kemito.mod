@@ -27,7 +27,7 @@ param MachineCost {SIZES} >= 0;
 param netDemand {n in NODES}:=
 	if n in AVOCADOSUPPLIERS then -AvocadoSupply[n] else if n in AVOCADODEMANDS then AvocadoDemand[n];
 
-var Build {SIZES,PACKHOUSES}, integer;
+var Build {SIZES,PACKHOUSES} >=0, <=50, integer;
 var Flow {(i,j) in ARCS} >= Lower[i,j],<=Upper[i,j];
 
 set APPLENODES := (APPLESUPPLIERS) union (PACKHOUSES) union (APPLEDEMANDS);
@@ -39,19 +39,19 @@ param AppleSupplierToPackhouse {APPLESUPPLIERS,PACKHOUSES};
 param AppleCost {APPLEARCS};
 param AppleSupply {APPLESUPPLIERS} >= 0;
 param AppleDemand {APPLEDEMANDS} >= 0;
-param AppleLower {ARCS} >= 0 , default 0;
+param AppleLower {APPLEARCS} >= 0 , default 0;
 param AppleUpper {(i,j) in APPLEARCS} >= AppleLower[i,j], default 99999999999;
 
 param netDemandApples {n in APPLENODES}:=
 	if n in APPLESUPPLIERS then -AppleSupply[n] else if n in APPLEDEMANDS then AppleDemand[n];
 
 var AppleBuild {SIZES,PACKHOUSES}, >= 0, <= 50, integer;
-var AppleFlow {(i,j) in APPLEARCS} >= Lower[i,j],<=Upper[i,j];
+var AppleFlow {(i,j) in APPLEARCS} >= AppleLower[i,j],<=AppleUpper[i,j];
 
 minimize TotalCost :
   sum {(i,j) in ARCS}
     Cost[i, j] * Flow[i, j] + sum{s in SIZES, i in PACKHOUSES} MachineCost[s]*Build[s,i] +  sum {(k,l) in APPLEARCS}
-    AppleCost[k, l] * AppleFlow[k, l] + sum{s in SIZES, k in PACKHOUSES} MachineCost[s]*Build[s,k];
+    AppleCost[k, l] * AppleFlow[k, l] + sum{s in SIZES, k in PACKHOUSES} MachineCost[s]*AppleBuild[s,k];
 
 
 #subject to UseSupply {i in AVOCADOSUPPLIERS}:
