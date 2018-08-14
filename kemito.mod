@@ -2,14 +2,20 @@
 
 model;
 set AVOCADOSUPPLIERS;
+set APPLESUPPLIERS;
 set PACKHOUSES;
 set AVOCADODEMANDS;
+set APPLEDEMANDS;
 set SIZES;
+set HISTORICAL;
 
 param AvocadoSupplierToPackhouse {AVOCADOSUPPLIERS,PACKHOUSES};
 param AvocadoPackhouseToDemand {PACKHOUSES,AVOCADODEMANDS};
+param AvocadoDemandHistorical {AVOCADODEMANDS,HISTORICAL};
+param AppleDemandHistorical {APPLEDEMANDS,HISTORICAL};
+param AppleSupply {APPLESUPPLIERS};
 
-set NODES :=(AVOCADOSUPPLIERS) union (PACKHOUSES) union (AVOCADODEMANDS);
+set NODES := (AVOCADOSUPPLIERS) union (PACKHOUSES) union (AVOCADODEMANDS);
 set ARCS := (AVOCADOSUPPLIERS cross PACKHOUSES) union (PACKHOUSES cross AVOCADODEMANDS);
 
 param Cost {ARCS};
@@ -38,7 +44,6 @@ minimize TotalCost :
 
 subject to conserveFlow {j in NODES}:
   sum {(i,j) in ARCS} Flow[i, j] - sum {(j,k) in ARCS}Flow[j, k] >= netDemand[j];
-  
+
 subject to MeetCapacity {i in PACKHOUSES}:
-  sum {(i,j) in ARCS} Flow[i, j] <= sum{s in SIZES} Capacity[s]*Build[s,i];
-  
+  sum {(i,j) in ARCS} Flow[i, j] <= sum{s in SIZES} PackingRate[s]*Build[s,i];
