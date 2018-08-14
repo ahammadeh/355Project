@@ -14,6 +14,8 @@ param AvocadoPackhouseToDemand {PACKHOUSES,AVOCADODEMANDS};
 param AvocadoDemandHistorical {AVOCADODEMANDS,HISTORICAL};
 param AppleDemandHistorical {APPLEDEMANDS,HISTORICAL};
 param AppleSupply {APPLESUPPLIERS};
+param ApplePackhouseToDemand {PACKHOUSES,APPLEDEMANDS};
+param AppleSupplierToPackhouse {APPLESUPPLIERS,PACKHOUSES};
 
 set NODES := (AVOCADOSUPPLIERS) union (PACKHOUSES) union (AVOCADODEMANDS);
 set ARCS := (AVOCADOSUPPLIERS cross PACKHOUSES) union (PACKHOUSES cross AVOCADODEMANDS);
