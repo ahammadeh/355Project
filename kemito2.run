@@ -1,4 +1,3 @@
-
 reset;
 
 model kemito2.mod;
@@ -9,6 +8,8 @@ param AppleCostFromDummy {APPLEDEMANDS} default 0;
 
 param AvocadoDifference;
 param AppleDifference;
+
+
 
 data kemito.dat;
 
@@ -43,11 +44,21 @@ if AppleDifference > 0 then
 # Make sure the problem is oversupplied or balanced
 check : sum {s in APPLESUPPLIERS} AppleSupply[s] >= sum {d in APPLEDEMANDS} AppleDemand[d];
 */
+
 option solver gurobi;
 
 solve;
+
 display Build;
-display Flow;
 display AppleBuild;
+/*
+display Flow;
 display AppleFlow;
+*/
 display TotalCost;
+
+display AvocadoConfigCost;
+display AppleConfigCost;
+display MinCost;
+display MaxCost;
+display ExpectedCost;
