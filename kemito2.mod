@@ -41,13 +41,23 @@ param AppleDemand {APPLEDEMANDS} >= 0;
 param netDemandApples {n in APPLENODES, h in HISTORICAL}:=
 	if n in APPLESUPPLIERS then -AppleSupply[n] else if n in APPLEDEMANDS then AppleDemandHistorical[n,h];
 
+
+
+	
 var AppleBuild {SIZES,PACKHOUSES}, >= 0, <= 50, integer;
 var AppleFlow {(i,j) in APPLEARCS, h in HISTORICAL} >= 0,<= 9999999999999;
 
+var AvocadoConfigCost = sum{s in SIZES, i in PACKHOUSES} 1000*MachineCost[s]*Build[s,i];
+var AppleConfigCost = sum{s in SIZES, i in PACKHOUSES} 1000*MachineCost[s]*AppleBuild[s,i];
+var MinCost = min{h in HISTORICAL} (sum {(i,j) in ARCS} Cost[i, j] * Flow[i, j, h] + sum {(k,l) in APPLEARCS} AppleCost[k, l] * AppleFlow[k, l, h]) + AvocadoConfigCost + AppleConfigCost ;
+var MaxCost = max{h in HISTORICAL} (sum {(i,j) in ARCS} Cost[i, j] * Flow[i, j, h] +sum {(k,l) in APPLEARCS} AppleCost[k, l] * AppleFlow[k, l, h]) + AvocadoConfigCost + AppleConfigCost ;
+var ExpectedCost = (sum {(i,j) in ARCS,h in HISTORICAL} Cost[i, j] * Flow[i, j, h] + sum {(k,l) in APPLEARCS,h in HISTORICAL} AppleCost[k, l] * AppleFlow[k, l, h])/10 + AvocadoConfigCost + AppleConfigCost;
+
+
 minimize TotalCost :
   sum {(i,j) in ARCS,h in HISTORICAL}
-    Cost[i, j] * Flow[i, j, h] + sum{s in SIZES, i in PACKHOUSES} MachineCost[s]*Build[s,i] +  sum {(k,l) in APPLEARCS, h in HISTORICAL}
-    AppleCost[k, l] * AppleFlow[k, l, h] + sum{s in SIZES, k in PACKHOUSES} MachineCost[s]*AppleBuild[s,k];
+    Cost[i, j] * Flow[i, j, h] + sum{s in SIZES, i in PACKHOUSES} 1000*MachineCost[s]*Build[s,i] +  sum {(k,l) in APPLEARCS, h in HISTORICAL}
+    AppleCost[k, l] * AppleFlow[k, l, h] + sum{s in SIZES, k in PACKHOUSES} 1000*MachineCost[s]*AppleBuild[s,k];
 
 
 #subject to UseSupply {i in AVOCADOSUPPLIERS}:
@@ -68,4 +78,4 @@ subject to conserveFlowApples {j in APPLENODES, h in HISTORICAL}:
 subject to MeetCapacityApples {i in PACKHOUSES, h in HISTORICAL}:
   sum {(i,j) in APPLEARCS} AppleFlow[i, j, h] <= sum{s in SIZES} PackingRate[s]*AppleBuild[s,i];
   
-  
+
