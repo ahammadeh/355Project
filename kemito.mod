@@ -1,75 +1,61 @@
-#test change for commenting
-
 model;
-set AVOCADOSUPPLIERS;
-set APPLESUPPLIERS;
+
+set AVOCADO_SUPPLIERS;
+set APPLE_SUPPLIERS;
 set PACKHOUSES;
-set AVOCADODEMANDS;
-set APPLEDEMANDS;
+set AVOCADO_DEMANDS;
+set APPLE_DEMANDS;
 set SIZES;
 set HISTORICAL;
+set AVOCADO_NODES := (AVOCADO_SUPPLIERS) union (PACKHOUSES) union (AVOCADO_DEMANDS);
+set AVOCADO_ARCS := (AVOCADO_SUPPLIERS cross PACKHOUSES) union (PACKHOUSES cross AVOCADO_DEMANDS);
+set APPLE_NODES := (APPLE_SUPPLIERS) union (PACKHOUSES) union (APPLE_DEMANDS);
+set APPLE_ARCS := (APPLE_SUPPLIERS cross PACKHOUSES) union (PACKHOUSES cross APPLE_DEMANDS);
 
-param AvocadoSupplierToPackhouse {AVOCADOSUPPLIERS,PACKHOUSES};
-param AvocadoPackhouseToDemand {PACKHOUSES,AVOCADODEMANDS};
-param AvocadoDemandHistorical {AVOCADODEMANDS,HISTORICAL};
+param AvocadoSupplierToPackhouse {AVOCADO_SUPPLIERS,PACKHOUSES};
+param AvocadoPackhouseToDemand {PACKHOUSES,AVOCADO_DEMANDS};
+param AvocadoDemandHistorical {AVOCADO_DEMANDS,HISTORICAL};
+param AvocadoCost {AVOCADO_ARCS};
+param AvocadoSupply {AVOCADO_SUPPLIERS} >= 0;
+param AvocadoDemand {AVOCADO_DEMANDS} >= 0;
+param AvocadoLower {AVOCADO_ARCS} >= 0 , default 0;
+param AvocadoUpper {(i,j) in AVOCADO_ARCS} >= AvocadoLower[i,j], default Infinity;
 
-set NODES := (AVOCADOSUPPLIERS) union (PACKHOUSES) union (AVOCADODEMANDS);
-set ARCS := (AVOCADOSUPPLIERS cross PACKHOUSES) union (PACKHOUSES cross AVOCADODEMANDS);
+param AppleSupplierToPackhouse {APPLE_SUPPLIERS,PACKHOUSES};
+param ApplePackhouseToDemand {PACKHOUSES,APPLE_DEMANDS};
+param AppleDemandHistorical {APPLE_DEMANDS,HISTORICAL};
+param AppleCost {APPLE_ARCS};
+param AppleSupply {APPLE_SUPPLIERS} >= 0;
+param AppleDemand {APPLE_DEMANDS} >= 0;
+param AppleLower {APPLE_ARCS} >= 0, default 0;
+param AppleUpper {(i,j) in APPLE_ARCS} >= AppleLower[i,j], default Infinity;
 
-param Cost {ARCS};
-param AvocadoSupply {AVOCADOSUPPLIERS} >= 0;
-param AvocadoDemand {AVOCADODEMANDS} >= 0;
-param Lower {ARCS} >= 0 , default 0;
-param Upper {(i,j) in ARCS} >= Lower[i,j], default 99999999999;
 param PackingRate {SIZES} >= 0;
 param MachineCost {SIZES} >= 0;
 
-param netDemand {n in NODES}:=
-	if n in AVOCADOSUPPLIERS then -AvocadoSupply[n] else if n in AVOCADODEMANDS then AvocadoDemand[n];
+param NetDemandAvocado {n in AVOCADO_NODES}:=
+	if n in AVOCADO_SUPPLIERS then -AvocadoSupply[n] else if n in AVOCADO_DEMANDS then AvocadoDemand[n];
+param NetDemandApples {n in APPLE_NODES}:=
+	if n in APPLE_SUPPLIERS then -AppleSupply[n] else if n in APPLE_DEMANDS then AppleDemand[n];
 
-var Build {SIZES,PACKHOUSES} >=0, <=50, integer;
-var Flow {(i,j) in ARCS} >= Lower[i,j],<=Upper[i,j];
-
-set APPLENODES := (APPLESUPPLIERS) union (PACKHOUSES) union (APPLEDEMANDS);
-set APPLEARCS := (APPLESUPPLIERS cross PACKHOUSES) union (PACKHOUSES cross APPLEDEMANDS);
-
-param AppleDemandHistorical {APPLEDEMANDS,HISTORICAL};
-param ApplePackhouseToDemand {PACKHOUSES,APPLEDEMANDS};
-param AppleSupplierToPackhouse {APPLESUPPLIERS,PACKHOUSES};
-param AppleCost {APPLEARCS};
-param AppleSupply {APPLESUPPLIERS} >= 0;
-param AppleDemand {APPLEDEMANDS} >= 0;
-param AppleLower {APPLEARCS} >= 0 , default 0;
-param AppleUpper {(i,j) in APPLEARCS} >= AppleLower[i,j], default 99999999999;
-
-param netDemandApples {n in APPLENODES}:=
-	if n in APPLESUPPLIERS then -AppleSupply[n] else if n in APPLEDEMANDS then AppleDemand[n];
-
-var AppleBuild {SIZES,PACKHOUSES}, >= 0, <= 50, integer;
-var AppleFlow {(i,j) in APPLEARCS} >= AppleLower[i,j],<=AppleUpper[i,j];
+var AvocadoBuild {SIZES,PACKHOUSES} >=0, <= Infinity, integer;
+var AvocadoFlow {(i,j) in AVOCADO_ARCS} >= AvocadoLower[i,j], <= AvocadoUpper[i,j], integer; # Added integer constraint 4/09/18
+var AppleBuild {SIZES,PACKHOUSES}, >= 0, <= Infinity, integer;
+var AppleFlow {(i,j) in APPLE_ARCS} >= AppleLower[i,j], <= AppleUpper[i,j], integer; # Added integer constraint 4/09/18
 
 minimize TotalCost :
-  sum {(i,j) in ARCS}
-    Cost[i, j] * Flow[i, j] + sum{s in SIZES, i in PACKHOUSES} MachineCost[s]*Build[s,i] +  sum {(k,l) in APPLEARCS}
-    AppleCost[k, l] * AppleFlow[k, l] + sum{s in SIZES, k in PACKHOUSES} MachineCost[s]*AppleBuild[s,k];
+  sum {(i,j) in AVOCADO_ARCS}
+    AvocadoCost[i, j] * AvocadoFlow[i, j] + sum{s in SIZES, i in PACKHOUSES} MachineCost[s] * AvocadoBuild[s,i] +  sum {(k,l) in APPLE_ARCS}
+    AppleCost[k, l] * AppleFlow[k, l] + sum{s in SIZES, k in PACKHOUSES} MachineCost[s] * AppleBuild[s,k];
 
+subject to ConserveFlowAvocados {j in AVOCADO_NODES}:
+  sum {(i,j) in AVOCADO_ARCS} AvocadoFlow[i, j] - sum {(j,k) in AVOCADO_ARCS}AvocadoFlow[j, k] >= NetDemandAvocado[j];
 
-#subject to UseSupply {i in AVOCADOSUPPLIERS}:
-#  sum {(i,j) in ARCS} Flow[i, j]/Conversion[j] = Supply[i];
+subject to MeetCapacityAvocados {i in PACKHOUSES}:
+  sum {(i,j) in AVOCADO_ARCS} AvocadoFlow[i, j] <= sum{s in SIZES} PackingRate[s] * AvocadoBuild[s,i];
 
-#subject to MeetDemand {j in AVOCADODEMANDS}:
-#  sum {(i,j) in ARCS} Flow[i, j] = Demand[j];
-
-subject to conserveFlow {j in NODES}:
-  sum {(i,j) in ARCS} Flow[i, j] - sum {(j,k) in ARCS}Flow[j, k] >= netDemand[j];
-
-subject to MeetCapacity {i in PACKHOUSES}:
-  sum {(i,j) in ARCS} Flow[i, j] <= sum{s in SIZES} PackingRate[s]*Build[s,i];
-  
-subject to conserveFlowApples {j in APPLENODES}:
-  sum {(i,j) in APPLEARCS} AppleFlow[i, j] - sum {(j,k) in APPLEARCS}AppleFlow[j, k] >= netDemandApples[j];
+subject to ConserveFlowApples {j in APPLE_NODES}:
+  sum {(i,j) in APPLE_ARCS} AppleFlow[i, j] - sum {(j,k) in APPLE_ARCS}AppleFlow[j, k] >= NetDemandApples[j];
 
 subject to MeetCapacityApples {i in PACKHOUSES}:
-  sum {(i,j) in APPLEARCS} AppleFlow[i, j] <= sum{s in SIZES} PackingRate[s]*AppleBuild[s,i];
-  
-  
+  sum {(i,j) in APPLE_ARCS} AppleFlow[i, j] <= sum{s in SIZES} PackingRate[s] * AppleBuild[s,i];
