@@ -43,7 +43,7 @@ if AppleDifference > 0 then
 # Make sure the problem is oversupplied or balanced
 check : sum {s in APPLE_SUPPLIERS} AppleSupply[s] >= sum {d in APPLE_DEMANDS} AppleDemand[d];
 
-option solver './gurobi';
+option solver gurobi;
 
 for {h in HISTORICAL}
 {
