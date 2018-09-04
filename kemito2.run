@@ -3,58 +3,58 @@ reset;
 model kemito2.mod;
 
 #initialise dummy supplies to be used if needed
-param AvocadoCostFromDummy {AVOCADODEMANDS} default 0;
-param AppleCostFromDummy {APPLEDEMANDS} default 0;
+param AvocadoCostFromDummy {AVOCADO_DEMANDS} default 0;
+param AppleCostFromDummy {APPLE_DEMANDS} default 0;
 
 param AvocadoDifference;
 param AppleDifference;
 
-
-
 data kemito.dat;
 
+let {s in SIZES} MachineCost[s] := MachineCost[s] * 1000; # Multiply all machine costs by 1000 to keep units the same.
+
 #Cost array
-let {(i, j) in ARCS} Cost[i,j] := if (i in AVOCADOSUPPLIERS) and (j in PACKHOUSES) then AvocadoSupplierToPackhouse[i,j] else if (i in PACKHOUSES) and (j in AVOCADODEMANDS) then AvocadoPackhouseToDemand[i,j];
-let {(i, j) in APPLEARCS} AppleCost[i,j] := if (i in APPLESUPPLIERS) and (j in PACKHOUSES) then AppleSupplierToPackhouse[i,j] else if (i in PACKHOUSES) and (j in APPLEDEMANDS) then ApplePackhouseToDemand[i,j];
+let {(i, j) in AVOCADO_ARCS} AvocadoCost[i,j] := if (i in AVOCADO_SUPPLIERS) and (j in PACKHOUSES) then AvocadoSupplierToPackhouse[i,j] else if (i in PACKHOUSES) and (j in AVOCADO_DEMANDS) then AvocadoPackhouseToDemand[i,j];
+let {(i, j) in APPLE_ARCS} AppleCost[i,j] := if (i in APPLE_SUPPLIERS) and (j in PACKHOUSES) then AppleSupplierToPackhouse[i,j] else if (i in PACKHOUSES) and (j in APPLE_DEMANDS) then ApplePackhouseToDemand[i,j];
 
 /*
 #check and add dummy supply for avocado if needed
-let AvocadoDifference := (sum {d in AVOCADODEMANDS} AvocadoDemand[d]) - (sum {s in AVOCADOSUPPLIERS} AvocadoSupply[s]);                  
+let AvocadoDifference := (sum {d in AVOCADO_DEMANDS} AvocadoDemand[d]) - (sum {s in AVOCADO_SUPPLIERS} AvocadoSupply[s]);
 
 if AvocadoDifference > 0 then
 {
-  let AVOCADOSUPPLIERS := AVOCADOSUPPLIERS union {'Dummy'};
+  let AVOCADO_SUPPLIERS := AVOCADO_SUPPLIERS union {'Dummy'};
   let AvocadoSupply['Dummy'] := AvocadoDifference;
-  let {d in PACKHOUSES} Cost['Dummy', d] := AvocadoCostFromDummy[d];
+  let {d in PACKHOUSES} AvocadoCost['Dummy', d] := AvocadoCostFromDummy[d];
 }; # else the problem is oversupplied or balanced
 
 # Make sure the problem is oversupplied or balanced
-check : sum {s in AVOCADOSUPPLIERS} AvocadoSupply[s] >= sum {d in AVOCADODEMANDS} AvocadoDemand[d];
+check : sum {s in AVOCADO_SUPPLIERS} AvocadoSupply[s] >= sum {d in AVOCADO_DEMANDS} AvocadoDemand[d];
 
 #check and add dummy supply for apple if needed
-let AppleDifference := (sum {d in APPLEDEMANDS} AppleDemand[d]) - (sum {s in APPLESUPPLIERS} AppleSupply[s]);                  
+let AppleDifference := (sum {d in APPLE_DEMANDS} AppleDemand[d]) - (sum {s in APPLE_SUPPLIERS} AppleSupply[s]);
 
 if AppleDifference > 0 then
 {
-  let APPLESUPPLIERS := APPLESUPPLIERS union {'Dummy'};
+  let APPLE_SUPPLIERS := APPLE_SUPPLIERS union {'Dummy'};
   let AppleSupply['Dummy'] := AppleDifference;
-  let {d in PACKHOUSES} Cost['Dummy', d] := AppleCostFromDummy[d];
+  let {d in PACKHOUSES} AvocadoCost['Dummy', d] := AppleCostFromDummy[d];
 }; # else the problem is oversupplied or balanced
 
 # Make sure the problem is oversupplied or balanced
-check : sum {s in APPLESUPPLIERS} AppleSupply[s] >= sum {d in APPLEDEMANDS} AppleDemand[d];
+check : sum {s in APPLE_SUPPLIERS} AppleSupply[s] >= sum {d in APPLE_DEMANDS} AppleDemand[d];
 */
 
 option solver gurobi;
 
 solve;
 
-display Build;
+display AvocadoBuild;
 display AppleBuild;
-/*
-display Flow;
-display AppleFlow;
-*/
+
+/* display AvocadoFlow;
+display AppleFlow; */
+
 display TotalCost;
 
 display AvocadoConfigCost;
