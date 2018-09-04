@@ -1,8 +1,8 @@
-set AVOCADOSUPPLIERS := S1 S2 S3 S4 ;
-set APPLESUPPLIERS := S1 S2 S3 S4 S5 S6 S7 S8 S9 S10 ;
+set AVOCADO_SUPPLIERS := S1 S2 S3 S4 ;
+set APPLE_SUPPLIERS := S1 S2 S3 S4 S5 S6 S7 S8 S9 S10 ;
 set PACKHOUSES := T1 T2 T3 T4 ;
-set AVOCADODEMANDS := D1 D2 D3 D4 D5 ;
-set APPLEDEMANDS := D1 D2 D3 D4 D5 D6 D7 D8 D9 D10 D11 D12 D13 D14 D15 ;
+set AVOCADO_DEMANDS := D1 D2 D3 D4 D5 ;
+set APPLE_DEMANDS := D1 D2 D3 D4 D5 D6 D7 D8 D9 D10 D11 D12 D13 D14 D15 ;
 set SIZES := SMALL MEDIUM LARGE ;
 set HISTORICAL := H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 ;
 
@@ -12,19 +12,19 @@ S2		285
 S3		983
 S4		264
  ;
- 
-param MachineCost :=
-SMALL	10
-MEDIUM	25
-LARGE	35
+
+param   MachineCost :=
+SMALL	  10
+MEDIUM  25
+LARGE	  35
  ;
 
-param PackingRate :=
-SMALL	100
+param   PackingRate :=
+SMALL	  100
 MEDIUM	375
-LARGE	500
+LARGE	  500
  ;
- 
+
 param AvocadoDemand :=
 D1  719
 D2  224
@@ -32,23 +32,23 @@ D3  1077
 D4  20
 D5  20
  ;
- 
+
 param AppleDemand :=
-D1	180	
-D2	172	
-D3	74	
-D4	93	
-D5	57	
-D6	53	
+D1	180
+D2	172
+D3	74
+D4	93
+D5	57
+D6	53
 D7	2266
-D8	53	
-D9	97	
-D10	89	
-D11	53	
-D12	55	
-D13	304	
-D14	80	
-D15	289	
+D8	53
+D9	97
+D10	89
+D11	53
+D12	55
+D13	304
+D14	80
+D15	289
  ;
 
 param AvocadoSupplierToPackhouse :
@@ -58,7 +58,7 @@ S2  38 61 5  51
 S3  67 9  74 89
 S4  48 4  11 18
  ;
- 
+
 param AvocadoPackhouseToDemand (tr) :
     T1 T2 T3 T4 :=
 D1  77 73 16 64
@@ -67,15 +67,15 @@ D3  60 66 14 90
 D4  96 46 63 44
 D5  44 97 52 70
  ;
- 
+
 param AvocadoDemandHistorical:
    H1   H2   H3   H4  H5   H6   H7   H8   H9   H10:=
-D1 6    1953 1976 262 1101 145  10   109  335  719 
-D2 1609 12   58   131 407  1159 306  98   1240 224 
+D1 6    1953 1976 262 1101 145  10   109  335  719
+D2 1609 12   58   131 407  1159 306  98   1240 224
 D3 326  77   8    524 67   160  1665 106  58   1077
-D4 85   9    7    765 64   180  5    1439 70   20 
+D4 85   9    7    765 64   180  5    1439 70   20
 D5 35   9    13   173 216  210  74   102  152  20
-;
+ ;
 
 param AppleSupply :=
 S1		69
@@ -88,7 +88,7 @@ S7		364
 S8		968
 S9		594
 S10		14
-;
+ ;
 
 param AppleSupplierToPackhouse :
 		T1	T2	T3	T4:=
@@ -102,7 +102,7 @@ S7	20	63	72	67
 S8	87	47	72	67
 S9	24	68	83	1
 S10	32	20	96	36
-;
+ ;
 
 param ApplePackhouseToDemand (tr):
 		T1	T2	T3	T4:=
@@ -121,23 +121,23 @@ D12	2		14	99	38
 D13	85	14	6		48
 D14	7		93	1		71
 D15	92	40	79	75
-;
+ ;
 
 param AppleDemandHistorical:
-	H1		H2		H3		H4		H5		H6		H7		H8		H9		H10:=
-D1	173		12		1138	1854	116		4		26		868		141		180	
-D2	50		715		67		82		101		2		2		38		125		172	
-D3	114		12		233		71		52		5		1754	10		100		74	
-D4	17		32		884		120		32		5		3		10		431		93	
-D5	78		17		221		66		32		2		4		10		278		57	
-D6	209		12		524		66		72		3		2		49		1286	53	
-D7	21		42		146		225		29		2		2		36		100		2266
-D8	1644	10		81		74		84		6		11		10		193		53	
-D9	32		11		111		254		131		2		6		14		306		97	
-D10	29		19		62		84		45		14		2		3178	104		89	
-D11	47		10		74		71		2475	4218	15		14		193		53	
-D12	195		351		121		467		32		2		4		11		100		55	
-D13	1570	12		97		336		655		5		16		14		104		304	
-D14	16		2846	60		77		30		2		14		52		100		80	
-D15	155		249		93		66		29		76		2488	36		350		289	
-;
+	  H1		  H2		H3		H4		H5		H6		H7		H8		H9		H10:=
+D1  173     12    1138  1854  116   4     26    868   141   180
+D2  50      715   67    82    101   2     2     38    125   172
+D3  114     12    233   71    52    5     1754  10    100   74
+D4  17      32    884   120   32    5     3     10    431   93
+D5  78      17    221   66    32    2     4     10    278   57
+D6  209     12    524   66    72    3     2     49    1286  53
+D7  21      42    146   225   29    2     2     36    100   2266
+D8  1644    10    81    74    84    6     11    10    193   53
+D9  32      11    111   254   131   2     6     14    306   97
+D10 29      19    62    84    45    14    2     3178  104   89
+D11 47      10    74    71    2475  4218  15    14    193   53
+D12 195     351   121   467   32    2     4     11    100   55
+D13 1570    12    97    336   655   5     16    14    104   304
+D14 16      2846  60    77    30    2     14    52    100   80
+D15 155     249   93    66    29    76    2488  36    350   289
+ ;
