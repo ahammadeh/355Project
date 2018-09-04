@@ -59,3 +59,4 @@ subject to ConserveFlowApples {j in APPLE_NODES}:
 
 subject to MeetCapacityApples {i in PACKHOUSES}:
   sum {(i,j) in APPLE_ARCS} AppleFlow[i, j] <= sum{s in SIZES} PackingRate[s] * AppleBuild[s,i];
+
